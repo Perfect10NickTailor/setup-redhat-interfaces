@@ -1,0 +1,14 @@
+DEVICE="{{ item.device }}"
+BOOTPROTO="none"
+ONBOOT="yes"
+USERCTL="no"
+PEERDNS="no"
+PEERNTP="no"
+TYPE="Ethernet"
+HWADDR="{{ item.mac }}"
+IPADDR="{{ item.ip }}"
+NETMASK="{{ item.nm }}"
+{% if item.gw is defined %}
+GATEWAY="{{ item.gw }}"
+{% endif %}
+NM_CONTROLLED="no"

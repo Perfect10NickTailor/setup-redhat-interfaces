@@ -1,0 +1,30 @@
+DEVICE="{{ item.device }}"
+BOOTPROTO="none"
+ONBOOT="yes"
+USERCTL="no"
+PEERDNS="no"
+PEERNTP="no"
+{% if item.mac is defined %}
+TYPE="Ethernet"
+HWADDR="{{ item.mac }}"
+MASTER="{{ item.master | default('mgt') }}"
+SLAVE="yes"
+{% endif %}
+{% if item.eth_opts is defined %}
+ETHTOOL_OPTS="{{ item.eth_opts }}"
+{% endif %}
+{% if item.gw is defined %}
+TYPE="Bond"
+BONDING_MASTER="yes"
+IPADDR="{{ item.ip }}"
+NETMASK="{{ item.nm }}"
+BONDING_OPTS="mode=active-backup miimon=100 primary={{ item.pr | default('ens4f0') }} primary_reselect=failure"
+GATEWAY="{{ item.gw }}"
+{% elif item.ip is defined %}
+TYPE="Bond"
+BONDING_MASTER="yes"
+IPADDR="{{ item.ip }}"
+NETMASK="{{ item.nm }}"
+BONDING_OPTS="mode=active-backup miimon=100 primary={{ item.pr | default('ens4f0') }} primary_reselect=failure"
+{% endif %}
+NM_CONTROLLED="no"

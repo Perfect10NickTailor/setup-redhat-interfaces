@@ -1,0 +1,35 @@
+---
+
+- name: Setup bond devices
+  template: src=bond_nic.j2 dest=/etc/sysconfig/network-scripts/ifcfg-{{ item.device }}
+  with_items: "{{ bond_devices | default([]) }}"
+
+- name: Setup NIC
+  template: src=nic.j2 dest=/etc/sysconfig/network-scripts/ifcfg-{{ item.device }}
+  with_items: "{{ nic_devices | default([]) }}"
+
+- name: Setup static routes
+  template: src=route.j2 dest=/etc/sysconfig/network-scripts/route-{{ item.device }}
+  with_items: "{{ routes | default([]) }}"
+
+- name: "Debug hostname"
+  debug: msg="inventory_hostname={{ inventory_hostname }}, hostvars[inventory_hostname]['inventory_hostname']={{ hostvars[inventory_hostname]['inventory_hostname'] }}, new_hostname={{ new_hostname }}"
+  ignore_errors: yes
+  when: new_hostname is defined
+
+- name: "set hostname fact from inventory_hostname"
+  set_fact: hostname_to_use={{ inventory_hostname }}
+
+- name: "set hostname fact from user hostname if defined"
+  set_fact: hostname_to_use={{ new_hostname }}
+  when: new_hostname is defined
+
+- name: change hostname of server
+  hostname:
+    name: "{{ new_hostname }}"
+
+- name: "show hostname fact"
+  debug: msg="hostname_to_use={{ hostname_to_use }}"
+
+
+

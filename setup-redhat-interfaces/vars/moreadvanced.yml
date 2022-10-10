@@ -1,0 +1,34 @@
+bond_devices:
+    - device: ens1
+      mac: ec:0d:9a:05:3b:f0
+      master: mgt
+      eth_opts: '-C ${DEVICE} adaptive-rx off rx-usecs 0 rx-frames 0; -K ${DEVICE} lro off'
+    - device: ens1d1
+      mac: ec:0d:9a:05:3b:f1
+      master: mgt
+      eth_opts: '-C ${DEVICE} adaptive-rx off rx-usecs 0 rx-frames 0; -K ${DEVICE} lro off'
+    - device: mgt
+      ip: 10.100.1.2
+      nm: 255.255.255.0
+      gw: 10.100.1.254
+      pr: ens1
+    - device: ens6
+      mac: ec:0d:9a:05:16:g0
+      master: app
+    - device: ens6d1
+      mac: ec:0d:9a:05:16:g1
+      master: app
+    - device: app
+      ip: 10.101.1.3
+      nm: 255.255.255.0
+      pr: ens6
+routes:
+    - device: app
+      route:
+        - 100.240.136.0/24
+        - 100.240.138.0/24
+
+    - device: app
+      gw: 10.156.177.1
+      route: 
+        - 10.156.148.0/24
